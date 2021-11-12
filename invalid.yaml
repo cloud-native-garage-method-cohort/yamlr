@@ -1,0 +1,40 @@
+ apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+
+metadata:
+  name: yaml-lint
+
+spec:
+  params:
+    - name: source-repo
+      type: string
+      description: Source code repository
+  
+  workspaces:
+    - name: pipeline-shared-data
+  
+  tasks:
+    - name: clone-source-repository
+      params:
+        - name: url
+          value: "$(params.source-repo)"
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: pipeline-shared-data
+          
+    - name: lint-yaml-files
+      params:
+        - name: args
+          value: ["."]
+      taskRef:
+        name: yaml-lint
+        kind: Task
+      runAfter:
+        - clone-source-repository
+      workspaces:
+        - name: shared-workspace
+          workspace: pipeline-shared-data
+
