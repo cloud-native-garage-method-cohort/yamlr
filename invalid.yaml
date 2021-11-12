@@ -1,4 +1,5 @@
- apiVersion: tekton.dev/v1beta1
+---
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 
 metadata:
@@ -9,10 +10,10 @@ spec:
     - name: source-repo
       type: string
       description: Source code repository
-  
+
   workspaces:
     - name: pipeline-shared-data
-  
+
   tasks:
     - name: clone-source-repository
       params:
@@ -24,7 +25,7 @@ spec:
       workspaces:
         - name: output
           workspace: pipeline-shared-data
-          
+
     - name: lint-yaml-files
       params:
         - name: args
@@ -37,4 +38,3 @@ spec:
       workspaces:
         - name: shared-workspace
           workspace: pipeline-shared-data
-
